@@ -11,4 +11,8 @@ public class RouteDefinitionDto {
     private String routeId;
     private String pathPattern;
     private String targetUrl;
+    private String allowedMethods;
+    private Boolean authRequired;
+    private String AuthType;
+    private Integer rateLimitPerMinute;
 }

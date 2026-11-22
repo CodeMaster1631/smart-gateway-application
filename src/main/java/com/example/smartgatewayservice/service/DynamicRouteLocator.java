@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +30,20 @@ public class DynamicRouteLocator implements RouteDefinitionLocator {
                     routeDefinition.setId(dto.getRouteId());
                     routeDefinition.setUri(URI.create(dto.getTargetUrl()));
 
-                    PredicateDefinition predicate = new PredicateDefinition("Path=" + dto.getPathPattern());
-                    routeDefinition.setPredicates((List.of(predicate)));
+                    PredicateDefinition predicate1 = new PredicateDefinition("Path=" + dto.getPathPattern());
+                    routeDefinition.setPredicates((List.of(predicate1)));
+
+                    PredicateDefinition predicate2 = new PredicateDefinition("Method=" + dto.getAllowedMethods());
+                    routeDefinition.setPredicates((List.of(predicate2)));
+
+                    Map<String, Object> metadata = Map.of(
+                            "authRequired", dto.getAuthRequired(),
+                            "authType", dto.getAuthType(),
+                            "rateLimitPerMinute", dto.getRateLimitPerMinute()
+                    );
+
+                    routeDefinition.setMetadata(metadata);
+
                     return routeDefinition;
                 });
     }
